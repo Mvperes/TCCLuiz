@@ -1,0 +1,33 @@
+#---------------------------------------#
+###### M?todo de Newton-Raphson #########
+#---------------------------------------#
+library(Deriv)
+newton<-function(fx,x0,tol=1e-5, n = 1000,digitis=6){
+  f0 <- fx(x0)
+  if (f0 == 0.0) {
+    newton<-(x0)
+    return(paste("x=",x0," ? a raiz da fun??o.",sep = ""))
+  }
+  
+  dx <- Deriv(fx)
+  
+  fxi<-c(f0)
+  xis<-c(x0)
+  erro<-c(NA)
+  
+  for (i in 1:n) {
+    xi <- x0 - (fx(x0) / dx(x0))
+    
+    xis[i+1]<-xi
+    fxi[i+1]<-fx(xi)
+    erro[i+1]<-abs((xi-x0)/xi)
+    x0 <- xi
+    if(erro[i+1]<tol) break
+  }
+  i<-0:(length(xis)-1)
+  result<-round(cbind(i,xis,fxi,erro),digitis)
+  nam<-c("i","x_i","f(x_i)","Erro")
+  colnames(result)<-nam
+  newton<-as.data.frame(result)
+  return(newton)
+}
